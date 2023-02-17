@@ -7,11 +7,12 @@ using System.Data.SqlClient;
 
 #region PROCEDURES
 //CREATE OR REPLACE PROCEDURE SP_INSERT_COMIC
-//      (P_IDCOMIC COMIC.IDCOMIC%TYPE, P_NOMBRE COMIC.NOMBRE%TYPE,
-//       P_IMAGEN COMIC.IMAGEN%TYPE, P_DESCRIPCION COMIC.DESCRIPCION%TYPE)
+//      (P_NOMBRE COMICS.NOMBRE%TYPE,
+//       P_IMAGEN COMICS.IMAGEN%TYPE, P_DESCRIPCION COMICS.DESCRIPCION%TYPE)
 //       AS
 //       BEGIN
-//      INSERT INTO COMIC VALUES(P_IDCOMIC, P_NOMBRE, P_IMAGEN, P_DESCRIPCION);
+//       INSERT INTO COMICS VALUES((SELECT MAX(IDCOMIC) +1 FROM COMICS)
+//       , P_NOMBRE, P_IMAGEN, P_DESCRIPCION);
 //COMMIT;
 //END;
 #endregion
@@ -26,7 +27,7 @@ namespace SegundaPracticaSaraAlvarez.Repositories
             public RepositoryComicsOracle()
             {
                 string connectionString = "DATA SOURCE=LOCALHOST:1521/XE;PERSIST SECURITY INFO=False;USER ID=system; PASSWORD=oracle;";
-                string sql = "SELECT * FROM HOSPITAL";
+                string sql = "SELECT * FROM COMICS";
                 this.adapter = new OracleDataAdapter(sql, connectionString);
                 this.tablaComics = new DataTable();
                 adapter.Fill(this.tablaComics);
@@ -48,16 +49,9 @@ namespace SegundaPracticaSaraAlvarez.Repositories
                         };
             return query.ToList();
         }
-        //public int GetMaximo()
-        //{
-            
-        //}
 
-        public void Insert(int idcomic, string nombre, string imagen, string descripcion)
+        public void Insert(string nombre, string imagen, string descripcion)
         {
-            //int maximo = this.GetMaximo();
-            OracleParameter pamid = new OracleParameter(":p_idcomic", idcomic);
-            this.com.Parameters.Add(pamid);
             OracleParameter pamnombre = new OracleParameter(":p_nombre", nombre);
             this.com.Parameters.Add(pamnombre);
             OracleParameter pamim = new OracleParameter(":p_imagen", imagen);

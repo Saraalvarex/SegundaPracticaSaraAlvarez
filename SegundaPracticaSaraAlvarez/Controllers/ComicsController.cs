@@ -24,9 +24,9 @@ namespace SegundaPracticaSaraAlvarez.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(int idcomic, string nombre, string imagen, string descripcion)
+        public IActionResult Create(string nombre, string imagen, string descripcion)
         {
-            this.repo.Insert(idcomic, nombre, imagen, descripcion);
+            this.repo.Insert(nombre, imagen, descripcion);
             return RedirectToAction("Index");
         }
     }

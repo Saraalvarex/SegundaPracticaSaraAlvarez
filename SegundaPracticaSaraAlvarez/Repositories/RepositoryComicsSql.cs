@@ -1,14 +1,17 @@
 ﻿using System.Data.SqlClient;
 using System.Data;
 using SegundaPracticaSaraAlvarez.Models;
+using System.Drawing;
+using static System.Net.Mime.MediaTypeNames;
+using System.Diagnostics.Metrics;
 
 namespace SegundaPracticaSaraAlvarez.Repositories
 {
     #region PROCEDURES
-    //CREATE PROCEDURE SP_INSERT_COMIC
-    //(@IDCOMIC INT, @NOMBRE NVARCHAR(150), @IMAGEN NVARCHAR(600), @DESCRIPCION NVARCHAR(500))
+    //ALTER PROCEDURE SP_INSERT_COMIC
+    //(@NOMBRE NVARCHAR(150), @IMAGEN NVARCHAR(600), @DESCRIPCION NVARCHAR(500))
     //AS
-    //    INSERT INTO COMICS VALUES(@IDCOMIC, @NOMBRE, @IMAGEN, @DESCRIPCION)
+    //    INSERT INTO COMICS VALUES((SELECT MAX(IDCOMIC) + 1 FROM COMICS), @NOMBRE, @IMAGEN, @DESCRIPCION)
     //GO
     #endregion
     public class RepositoryComicsSql: IRepo
@@ -17,6 +20,7 @@ namespace SegundaPracticaSaraAlvarez.Repositories
         private SqlConnection cn;
         private SqlDataAdapter adapter;
         private SqlCommand com;
+        SqlDataReader rdr;
         public RepositoryComicsSql()
         {
             string connectionString = @"Data Source=LOCALHOST\DESARROLLO;Initial Catalog=HOSPITAL;Persist Security Info=True;User ID=SA;Password=MCSD2022;";
@@ -44,10 +48,8 @@ namespace SegundaPracticaSaraAlvarez.Repositories
             return query.ToList();
         }
 
-        public void Insert(int idcomic, string nombre, string imagen, string descripcion)
+        public void Insert(string nombre, string imagen, string descripcion)
         {
-            SqlParameter pamid = new SqlParameter("@idcomic", idcomic);
-            this.com.Parameters.Add(pamid);
             SqlParameter pamnombre = new SqlParameter("@nombre", nombre);
             this.com.Parameters.Add(pamnombre);
             SqlParameter pamdirec = new SqlParameter("@imagen", imagen);
